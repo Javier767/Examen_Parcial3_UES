@@ -1,0 +1,1 @@
+Se almacenan los querys sql utilizados para la creación de la DB
