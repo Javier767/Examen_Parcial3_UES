@@ -11,16 +11,17 @@
   DTS:LocaleID="17418"
   DTS:ObjectName="DimAirline"
   DTS:PackageType="5"
-  DTS:VersionBuild="6"
-  DTS:VersionGUID="{3133F9D7-359C-4A28-ADFF-2C6D7F57AE88}">
+  DTS:VersionBuild="19"
+  DTS:VersionGUID="{C0BC83A1-2765-42CA-B9B2-CD0B950FBC47}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[Administrador de conexiones de archivos planos]"
+      DTS:refId="Package.ConnectionManagers[CSV Airlines]"
       DTS:CreationName="FLATFILE"
+      DTS:Description="Lectura de CSV de Airline"
       DTS:DTSID="{E6E69F1C-C726-4D68-9BAF-EAFF7C244B2D}"
-      DTS:ObjectName="Administrador de conexiones de archivos planos">
+      DTS:ObjectName="CSV Airlines">
       <DTS:ObjectData>
         <DTS:ConnectionManager
           DTS:Format="Delimited"
@@ -39,7 +40,7 @@
               DTS:DataType="129"
               DTS:TextQualified="True"
               DTS:ObjectName="Code"
-              DTS:DTSID="{FBBC24E2-4037-485C-B257-67ACA0BE5639}"
+              DTS:DTSID="{20268C95-B9EE-47D5-8CB6-1129A3D92FFA}"
               DTS:CreationName="" />
             <DTS:FlatFileColumn
               DTS:ColumnType="Delimited"
@@ -48,9 +49,26 @@
               DTS:DataType="129"
               DTS:TextQualified="True"
               DTS:ObjectName="Description"
-              DTS:DTSID="{02B4BA4D-CD0B-436F-9AFB-ECBBBA50571D}"
+              DTS:DTSID="{4B2F6637-CED0-4CCB-BE23-2D13312CD2C7}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.VUELOSDW.sa]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{C11744B5-AE15-40F1-BEA5-B8FA773A8042}"
+      DTS:ObjectName="localhost.VUELOSDW.sa">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;User ID=sa;Initial Catalog=VUELOSDW;Provider=SQLNCLI11.1;Application Name=SSIS-DimAirline-{C11744B5-AE15-40F1-BEA5-B8FA773A8042}localhost.VUELOSDW.sa;Auto Translate=False;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAygF0Lx/K7keYaH0wvgfaMwAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACkLm50cuSVBz+XSTe2IPmUHtEIvItMcJ8hCroMfHlmWAAAAAAOgAAAAAIAACAAAADOXQaUAY6x6dp93KcoYcM7AXkMQWJt2NWR1JtJsP6i3xAAAAAbhuNAHV7LU5bSSu1W1uJhQAAAAOWhf1DYU7zbTzklLHpbuGGZLGH0KLpMgSkbiiGG/0644X2R7VAA0Hy5kGBsTp+dM7JlknYgQASBxyUT8D0E/co</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -58,13 +76,13 @@
   <DTS:Variables />
   <DTS:Executables>
     <DTS:Executable
-      DTS:refId="Package\Data Flow Task"
+      DTS:refId="Package\Cargar CSV a Tabla Airlines"
       DTS:CreationName="Microsoft.Pipeline"
       DTS:Description="Data Flow Task"
       DTS:DTSID="{FD42E88C-CF5E-4F29-AB51-B18F1F9EF446}"
       DTS:ExecutableType="Microsoft.Pipeline"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Data Flow Task"
+      DTS:ObjectName="Cargar CSV a Tabla Airlines"
       DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
       <DTS:Variables />
       <DTS:ObjectData>
@@ -72,12 +90,147 @@
           version="1">
           <components>
             <component
-              refId="Package\Data Flow Task\Flat File Source"
+              refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Guardar valores en SQL Server"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[DimAirline]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[localhost.VUELOSDW.sa]"
+                  connectionManagerRefId="Package.ConnectionManagers[localhost.VUELOSDW.sa]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input].Columns[Description]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="Description"
+                      externalMetadataColumnId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input].ExternalColumns[Description]"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].Columns[Description]" />
+                    <inputColumn
+                      refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input].Columns[Code]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="Code"
+                      externalMetadataColumnId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input].ExternalColumns[airlineCode]"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].Columns[Code]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input].ExternalColumns[airlineKey]"
+                      dataType="i4"
+                      name="airlineKey" />
+                    <externalMetadataColumn
+                      refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input].ExternalColumns[airlineCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="airlineCode" />
+                    <externalMetadataColumn
+                      refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input].ExternalColumns[Description]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="Description" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV"
               componentClassID="Microsoft.FlatFileSource"
               contactInfo="Flat File Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
               description="Flat File Source"
               localeId="17418"
-              name="Flat File Source"
+              name="Leer valores de CSV"
               usesDispositions="true"
               version="1">
               <properties>
@@ -92,25 +245,25 @@
               </properties>
               <connections>
                 <connection
-                  refId="Package\Data Flow Task\Flat File Source.Connections[FlatFileConnection]"
-                  connectionManagerID="Package.ConnectionManagers[Administrador de conexiones de archivos planos]"
-                  connectionManagerRefId="Package.ConnectionManagers[Administrador de conexiones de archivos planos]"
+                  refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Connections[FlatFileConnection]"
+                  connectionManagerID="Package.ConnectionManagers[CSV Airlines]"
+                  connectionManagerRefId="Package.ConnectionManagers[CSV Airlines]"
                   name="FlatFileConnection" />
               </connections>
               <outputs>
                 <output
-                  refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output]"
+                  refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output]"
                   name="Flat File Source Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output].Columns[Code]"
+                      refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].Columns[Code]"
                       codePage="1252"
                       dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[Code]"
-                      length="50"
-                      lineageId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output].Columns[Code]"
+                      externalMetadataColumnId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].ExternalColumns[Code]"
+                      length="10"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].Columns[Code]"
                       name="Code"
                       truncationRowDisposition="FailComponent">
                       <properties>
@@ -125,14 +278,14 @@
                       </properties>
                     </outputColumn>
                     <outputColumn
-                      refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output].Columns[Description]"
+                      refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].Columns[Description]"
                       codePage="1252"
                       dataType="str"
                       errorOrTruncationOperation="Conversion"
                       errorRowDisposition="FailComponent"
-                      externalMetadataColumnId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[Description]"
-                      length="50"
-                      lineageId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output].Columns[Description]"
+                      externalMetadataColumnId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].ExternalColumns[Description]"
+                      length="100"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].Columns[Description]"
                       name="Description"
                       truncationRowDisposition="FailComponent">
                       <properties>
@@ -150,13 +303,13 @@
                   <externalMetadataColumns
                     isUsed="True">
                     <externalMetadataColumn
-                      refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[Code]"
+                      refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].ExternalColumns[Code]"
                       codePage="1252"
                       dataType="str"
                       length="50"
                       name="Code" />
                     <externalMetadataColumn
-                      refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Output].ExternalColumns[Description]"
+                      refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output].ExternalColumns[Description]"
                       codePage="1252"
                       dataType="str"
                       length="50"
@@ -164,27 +317,27 @@
                   </externalMetadataColumns>
                 </output>
                 <output
-                  refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Error Output]"
+                  refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Error Output]"
                   isErrorOut="true"
                   name="Flat File Source Error Output">
                   <outputColumns>
                     <outputColumn
-                      refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                      refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
                       codePage="1252"
                       dataType="text"
                       description="Flat File Source Error Output Column"
-                      lineageId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
                       name="Flat File Source Error Output Column" />
                     <outputColumn
-                      refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
+                      refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
                       dataType="i4"
-                      lineageId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
                       name="ErrorCode"
                       specialFlags="1" />
                     <outputColumn
-                      refId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
+                      refId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
                       dataType="i4"
-                      lineageId="Package\Data Flow Task\Flat File Source.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
+                      lineageId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
                       name="ErrorColumn"
                       specialFlags="2" />
                   </outputColumns>
@@ -193,6 +346,13 @@
               </outputs>
             </component>
           </components>
+          <paths>
+            <path
+              refId="Package\Cargar CSV a Tabla Airlines.Paths[Flat File Source Output]"
+              endId="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server.Inputs[OLE DB Destination Input]"
+              name="Flat File Source Output"
+              startId="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV.Outputs[Flat File Source Output]" />
+          </paths>
         </pipeline>
       </DTS:ObjectData>
     </DTS:Executable>
@@ -210,23 +370,74 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
-          Size="150.4,41.6"
-          Id="Package\Data Flow Task"
-          TopLeft="122.499993306895,206.266665232314" />
+          Size="208.8,41.6"
+          Id="Package\Cargar CSV a Tabla Airlines"
+          TopLeft="62.4999965851503,72.7999994937579" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
   <TaskHost
-    design-time-name="Package\Data Flow Task">
+    design-time-name="Package\Cargar CSV a Tabla Airlines">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="151.2,41.6"
-          Id="Package\Data Flow Task\Flat File Source"
-          TopLeft="244.999986613791,168.133332164155" />
+          Size="174.4,41.6"
+          Id="Package\Cargar CSV a Tabla Airlines\Leer valores de CSV"
+          TopLeft="86.6666619314092,62.3999995660781" />
+        <NodeLayout
+          Size="224,41.6"
+          Id="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server"
+          TopLeft="74.9999959021807,242.666664979193" />
+        <EdgeLayout
+          Id="Package\Cargar CSV a Tabla Airlines.Paths[Flat File Source Output]"
+          TopLeft="173.866661931409,103.999999566078">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="13.1333339707715,138.666665413115"
+              Start="0,0"
+              End="13.1333339707715,131.166665413115">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,65.3333327065574" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,65.3333327065574"
+                    Point2="0,69.3333327065574"
+                    Point3="4,69.3333327065574" />
+                  <mssgle:LineSegment
+                    End="9.1333339707715,69.3333327065574" />
+                  <mssgle:CubicBezierSegment
+                    Point1="9.1333339707715,69.3333327065574"
+                    Point2="13.1333339707715,69.3333327065574"
+                    Point3="13.1333339707715,73.3333327065574" />
+                  <mssgle:LineSegment
+                    End="13.1333339707715,131.166665413115" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Cargar CSV a Tabla Airlines\Guardar valores en SQL Server">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
 </Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>
